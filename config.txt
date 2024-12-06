@@ -1,3 +1,4 @@
 pin=9860
+precio_almuerzo=11500
 secret_key=DJEWDJJDEJN  
 db=mongodb://localhost:27017/colegio

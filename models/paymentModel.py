@@ -1,8 +1,10 @@
+# models/paymentModel.py
 from mongoengine import Document, ReferenceField, DateField, IntField, DictField, CASCADE
 from datetime import datetime, timedelta
 
 class Payment(Document):
     student = ReferenceField('Student', required=True, reverse_delete_rule=CASCADE)
+    transaction_day = DateField(required=True, default=datetime.today)  # Nueva fecha de transacción
     start_date = DateField(required=True, default=datetime.today)
     number_of_days = IntField(required=True)
     days_consumed = DictField(default={})  # Formato: {'YYYY-MM-DD': True/False}
@@ -16,7 +18,7 @@ class Payment(Document):
         dates = []
         current_date = self.start_date
         while len(dates) < self.number_of_days:
-            if current_date.weekday() < 5:  
+            if current_date.weekday() < 5:  # 0= lunes, 6= domingo
                 dates.append(current_date)
             current_date += timedelta(days=1)
         return dates

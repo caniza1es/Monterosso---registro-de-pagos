@@ -1,3 +1,4 @@
+<!-- templates/student_detail.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,27 +6,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalle del Estudiante</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <style>
-        .clickable-badge {
+        .clickable-icon {
             cursor: pointer;
             transition: transform 0.2s;
         }
-        .clickable-badge:hover {
-            transform: scale(1.05);
+        .clickable-icon:hover {
+            transform: scale(1.1);
         }
-        .badge-button {
+        .icon-button {
             border: none;
             background: none;
             padding: 0;
-            font-size: 1rem;
+            font-size: 1.5rem;
             cursor: pointer;
+        }
+        .consumed {
+            color: #198754; /* Verde */
+        }
+        .not-consumed {
+            color: #dc3545; /* Rojo */
+        }
+        .date-label {
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
         }
     </style>
 </head>
 <body class="bg-light">
 
-    <!-- Barra de Navegación -->
+
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
         <div class="container">
             <a class="navbar-brand text-primary" href="/">Dashboard</a>
@@ -102,32 +115,29 @@
                                                 </tr>
                                                 <tr>
                                                     <th>Costo Total</th>
-                                                    <td>{{ pago.number_of_days * 11500 }} COP</td>
+                                                    <td>{{ pago.number_of_days * valor_almuerzo }} COP</td>
                                                 </tr>
-                                                <tr>
-                                                    <th>Días Pagados</th>
-                                                    <td>{{ pago.number_of_days }} días</td>
-                                                </tr>
+                                                <!-- Eliminamos la fila duplicada de Días Pagados -->
                                                 <tr>
                                                     <th>Estado de Consumo</th>
                                                     <td>
-                                                        <div class="d-flex flex-wrap">
+                                                        <div class="row">
                                                             {% for date_str, consumed in pago.days_consumed.items() %}
-                                                                <div class="me-3 mb-2">
-                                                                    {{ date_str }} -
-                                                                    {% if consumed %}
+                                                                <div class="col-6 col-md-4 col-lg-3 mb-2">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <span class="date-label">{{ date_str }}</span>
                                                                         <form action="{{ url_for('mark_consumption', payment_id=pago.id, date=date_str) }}" method="POST" class="d-inline">
-                                                                            <button type="submit" class="badge bg-success clickable-badge badge-button">
-                                                                                Consumido
-                                                                            </button>
+                                                                            {% if consumed %}
+                                                                                <button type="submit" class="icon-button consumed clickable-icon" title="Consumido">
+                                                                                    <i class="bi bi-check-circle-fill"></i>
+                                                                                </button>
+                                                                            {% else %}
+                                                                                <button type="submit" class="icon-button not-consumed clickable-icon" title="No Consumido">
+                                                                                    <i class="bi bi-x-circle-fill"></i>
+                                                                                </button>
+                                                                            {% endif %}
                                                                         </form>
-                                                                    {% else %}
-                                                                        <form action="{{ url_for('mark_consumption', payment_id=pago.id, date=date_str) }}" method="POST" class="d-inline">
-                                                                            <button type="submit" class="badge bg-secondary clickable-badge badge-button">
-                                                                                No Consumido
-                                                                            </button>
-                                                                        </form>
-                                                                    {% endif %}
+                                                                    </div>
                                                                 </div>
                                                             {% endfor %}
                                                         </div>
@@ -152,7 +162,7 @@
         </div>
     </div>
 
-   
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
